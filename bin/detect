@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "ngrok"
+echo "JMX"
 exit 0

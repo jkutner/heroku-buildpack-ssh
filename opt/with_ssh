@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
 
-ssh_port=${SSH_PORT:-"1022"}
+ssh_port=${SSH_PORT:-"2222"}
 
 if [ -n "$NGROK_API_TOKEN" ]; then
   NGROK_OPTS="${NGROK_OPTS} --authtoken ${NGROK_API_TOKEN}"
 fi
 
-echo "Starting sshd: $(whoami)@$(hostname):2222"
-/app/.apt/usr/sbin/sshd -f /app/.ssh/sshd_config -o "Port ${ssh_port}"
+banner_file="/app/.ssh/banner.txt"
+cat << EOF > ${banner_file}
++--------------------
+| Welcome to Heroku!
++--------------------
+EOF
+
+echo "Starting sshd for $(whoami)"
+/app/.apt/usr/sbin/sshd -f /app/.ssh/sshd_config -o "Port ${ssh_port}" -o "Banner ${banner_file}"
 
 # Start the tunnel
 ngrok_cmd=".heroku/bin/ngrok tcp -log stdout ${NGROK_OPTS} ${ssh_port}"
-echo "Starting ngrok with command \`${ngrok_cmd}\`"
+echo "Starting ngrok..."
 eval "$ngrok_cmd &"
 ngrok_pid=$!
 
