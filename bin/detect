@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "JMX"
+echo "SSH"
 exit 0
