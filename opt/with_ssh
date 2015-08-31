@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+ssh_port=${SSH_PORT:-"2222"}
+
+if [ -n "$NGROK_API_TOKEN" ]; then
+  NGROK_OPTS="${NGROK_OPTS} --authtoken ${NGROK_API_TOKEN}"
+fi
+
+echo "Starting sshd..."
+/app/.apt/usr/sbin/sshd -f /app/.ssh/sshd_config -o "Port #{ssh_port}"
+echo "sshd running on $(hostname):2222"
+
+# Start the tunnel
+ngrok_cmd=".heroku/bin/ngrok tcp -log stdout ${NGROK_OPTS} ${ssh_port}"
+echo "Starting ngrok with command \`${ngrok_cmd}\`"
+eval "$ngrok_cmd &"
+ngrok_pid=$!
+
+eval "$@"
