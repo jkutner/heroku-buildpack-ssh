@@ -60,4 +60,19 @@ username in the logs to create an SSH command like this:
 
 ```sh-session
 $ ssh -i ~/.ssh/heroku_id_rsa -p 40306 u18370@0.tcp.ngrok.io
+...
+Are you sure you want to continue connecting (yes/no)? yes
+...
++--------------------
+| Welcome to Heroku!
++--------------------
+~ $
+```
+
+Now you can inspect a running process:
+
+```
+~ $ ps aux | grep ruby
+u18370      64  0.5  0.0  27792  4760 pts/0    Sl   21:40   0:00 bundle exec puma -C config/puma.rb
+u18370      67  0.0  0.0   8864   652 pts/0    S+   21:40   0:00 grep ruby
 ```
