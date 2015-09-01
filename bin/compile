@@ -14,35 +14,9 @@ CACHE_DIR=$2
 BP_DIR="$(cd "$(dirname "$0")" && pwd)"
 OPT_DIR=$BP_DIR/../opt/
 
-######### Borrowed from heroku-buildpack-apt
-APT_CACHE_DIR="$CACHE_DIR/apt/cache"
-APT_STATE_DIR="$CACHE_DIR/apt/state"
-APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
-
-mkdir -p "$APT_CACHE_DIR/archives/partial"
-mkdir -p "$APT_STATE_DIR/lists/partial"
-
-echo "-----> Installing openssh-server... "
-apt-get $APT_OPTIONS update | indent
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall openssh-server | indent
-mkdir -p $BUILD_DIR/.profile.d
-
-cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
-export PATH="\$HOME/.apt/usr/sbin:\$PATH"
-export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LD_LIBRARY_PATH"
-export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LIBRARY_PATH"
-export INCLUDE_PATH="\$HOME/.apt/usr/include:\$INCLUDE_PATH"
-export CPATH="\$INCLUDE_PATH"
-export CPPPATH="\$INCLUDE_PATH"
-export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
-EOF
-
-for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
-  dpkg -x $DEB $BUILD_DIR/.apt/
-done
-
 ######### Install ngrok
 echo -n "-----> Installing ngrok... "
+mkdir -p $BUILD_DIR/.profile.d
 mkdir -p $BUILD_DIR/.heroku/bin
 curl --silent --retry 3 -o ngrok.zip -L "https://dl.ngrok.com/ngrok_2.0.19_linux_amd64.zip" | indent
 unzip ngrok.zip -d $BUILD_DIR/.heroku/bin > /dev/null 2>&1
