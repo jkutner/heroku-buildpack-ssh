@@ -15,13 +15,14 @@ $ heroku config:set NGROK_API_TOKEN=xxxxxx
 Next, add this buildpack to your app:
 
 ```
-$ heroku buildpacks:add https://github.com/jkutner/heroku-buildpack-ssh.git
+$ heroku buildpacks:clear
+$ heroku buildpacks:set https://github.com/jkutner/heroku-buildpack-ssh.git
 ```
 
 Then add your primary buildpack. For example, if you are using Ruby:
 
 ```
-$ heroku buildpacks:add https://github.com/heroku/heroku-buildpack-ruby.git
+$ heroku buildpacks:add heroku/ruby
 ```
 
 Now modify your `Procfile` by prefixing your `web` process with the `with_ssh` command. For example:
