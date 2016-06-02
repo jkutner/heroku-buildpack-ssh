@@ -25,10 +25,10 @@ Then add your primary buildpack. For example, if you are using Ruby:
 $ heroku buildpacks:add heroku/ruby
 ```
 
-Now modify your `Procfile` by prefixing your `web` process with the `with_ssh` command. For example:
+To enable SSH run this command:
 
 ```
-web: with_ssh bundle exec puma -C config/puma.rb
+$ heroku config:set SSH_ENABLED="true"
 ```
 
 Finally, commit your changes, and redeploy the app:
@@ -64,9 +64,7 @@ $ ssh -i ~/.ssh/heroku_id_rsa -p 40306 u18370@0.tcp.ngrok.io
 ...
 Are you sure you want to continue connecting (yes/no)? yes
 ...
-+--------------------
-| Welcome to Heroku!
-+--------------------
+Connected to web.1
 ~ $
 ```
 
