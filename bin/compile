@@ -26,6 +26,9 @@ cat << EOF > $BUILD_DIR/.profile.d/ngrok.sh
 export PATH=\$HOME/.heroku/bin:\$PATH
 EOF
 
+######### Create profile.d startup script
+cp ${OPT_DIR}/sshd.sh $BUILD_DIR/.profile.d/sshd.sh
+
 ######### Install SSH launcher
 cp $OPT_DIR/with_ssh $BUILD_DIR/.heroku/bin/with_ssh
 chmod +x $BUILD_DIR/.heroku/bin/with_ssh
